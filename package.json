@@ -1,25 +1,14 @@
 {
-    "main": "cjs/index.js",
     "name": "reqwester",
     "description": "A simple, lightweight, and fast download framework for Node.js",
-    "version": "0.1.0",
+    "version": "0.1.5",
     "author": "StringentDev",
     "license": "MIT",
-    "module": "mjs/index.js",
+    "repo": "https://github.com/StringentDev/Reqwester",
+    "homepage": "https://github.com/StringentDev/Reqwester#readme",
+    "main": "./cjs/index.js",
+    "module": "./mjs/index.js",
     "scripts": {
         "test": "echo no test specified"
-    },
-    "exports": {
-        "import": {
-            "path": "./mjs/index.js",
-            "type": "module"
-        },
-        "require": {
-            "path": "./cjs/index.js",
-            "type": "commonjs"
-        }
-    },
-    "devDependencies": {
-        "cjstoesm": "^1.1.4"
     }
 }
