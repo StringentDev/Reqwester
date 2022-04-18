@@ -52,7 +52,7 @@ class api {
                 // emit data event
                 emitter.emit('data', {
                     ret: {
-                        data: chunk,
+                        body: chunk,
                         per: percent
                     },
                     res: response,
@@ -107,7 +107,7 @@ class api {
                 // emit data event
                 emitter.emit('data', {
                     ret: {
-                        data: chunk,
+                        body: chunk,
                         per: percent
                     },
                     res: response,
