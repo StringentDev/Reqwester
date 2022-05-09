@@ -1,0 +1,2 @@
+language = "nodejs"
+run = "node ./examples/demo_1.mjs"
