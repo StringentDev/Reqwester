@@ -1,101 +1,146 @@
 # Reqwester
-### Table of contents
-* [Reqwester](#reqwester)
-      * [Table of contents](#table-of-contents)
-   * [About](#about)
-   * [Changelog](#changelog)
-      * [0.0.0-Alpha](#000-alpha)
-   * [API](#api)
-      * [Defining and Importing](#defining-and-importing)
-         * [ES6 (modules)](#es6-modules)
-         * [CommonJS](#commonjs)
-      * [Warning and Error Structure](#warning-and-error-structure)
-      * [onErrorEvent](#onerrorevent)
-      * [onDataEvent](#ondataevent)
-      * [onResponseEvent](#onresponseevent)
-      * [Get](#get)
+###### The unopinionated HTTP/S client
+Reqwester was built around the issue in 
+which creating clients for `POST`, `GET`, 
+`PATCH` and `DEL` requests were unusually
+large. It took a lot of code to achieve a
+single `GET` request. So lets not get 
+started on `POST` which requires even more
+options like what data to send.
 
+This basically just queries the internet for servers.
 
-## About
-Reqwester us a super simple wrapper api for `http` and `https` requests to servers in order to download a file. This project is only in its infancy, meaning that most features have not been implemented.
+This project is designed to be a
+cross-platform service like Axios whilst
+providing an easy to understand OOP based
+async API to interact with the internet.
 
-## Changelog
-### 0.0.0-Alpha
-Initial commit including the following features.
- - Monitoring progress
- - Redirect following (cannot be turned off for now)
- - `https` and `http` wrapping
- - Ability pass options to the module
- - Events api
+**Reqwester is not Axios!**
 
 ## API
-### Defining and Importing
-#### ES6 (modules)
+### API Class
+The api class is the main way of interacting
+with the module. You just define the class
+and you can begin the process of using the
+module.
+
 ```js
-import reqwester from "reqwester"
+// commonjs
+const { api } = require("reqwester")
 
-api = new reqwester.api()
-
+// ECMA Script
+import { api } from "reqwester"
 ```
 
-#### CommonJS
-```js
-const requester = require("reqwester")
+### GET Request
+To create a get request, you can set the url
+and send custom headers if you want.
 
-api = new reqwester.api()
+```js
+let req = new api()
+
+req.SetURL("https://example.com/archive.zip")
+   .Acquire({
+		 // enforce get however if no body is
+		 // passed then it defaults to get
+		 method: "GET",
+		 headers: {}
+	 })
 ```
 
-^ Due to change rapidly in the next minor version for full configuration + control.
 
-### Warning and Error Structure
-```json
-{
-    "msg": "main basic message spat out",
-    "occurred": "Hint as to where the error occurred"
-}
+### POST Reqwest
+Same as get but with a required passalong.
+
+```js
+req.SetURL("https://example.com/post")
+   .Acquire({
+		 // Defaults to POST since body exists
+		 method: "POST",
+		 body: {
+			 data: "string"
+		 },
+		 headers: {}
+	 })
 ```
 
-^ This will be changed in the next minor version to have a fully generated error format.
+I don't think that we need to keep going 
+with this as `PATCH` and `DEL` are the same 
+format as `POST`
 
-### onErrorEvent
+## Readable stream 
+you can pipe the Readable steam to a 
+function using the `api.Stream` object and 
+`pipe(x)`
+
 ```js
-api.onErrorEvent((error) => {
-    console.error(error.msg)
+fs.writeFileStream( api.Stream )
+```
+
+## Configure Events
+```js
+api.event.add("EventName", () => {
+	// ... code goes here
 })
 ```
 
-^ the `onWarningEvent` works the same way but is fired in less meaningful circumstances, such as when the script is redirected.
+### Progress
+When data is recieved, this function 
+calculates the percentage of the content that
+has been recieved over what is expected (x100)
+to get the percentage which is then passed on
+to registered middleware functions.
 
-### onDataEvent
 ```js
-api.onDataEvent((data) => {
-    // use fs to APPEND data to file
+api.event.add("progress", (event) => {
+	console.log(
+		event.percent, 
+		event.chunkMin, 
+		event.chunkMax
+	)
 })
 ```
 
-to access headers, use `data.res` which contains the object that `https` or `http` return.
-
-You can access the percent at `data.ret.per` and the data being returned by the server at `data.ret.body`
-
-### onResponseEvent
+### Data
 ```js
-api.onResponseEvent((response) => {
-    // get called after a connection closes or a redirect.
+api.event.add("data", (event) => {
+	console.log(
+		event.res.body.appended, 
+		event.res.body.index,
+		event.res.body.all,
+		event.res.status
+		event.chunkMin, 
+		event.chunkMax
+	)
 })
 ```
-^ behaviour may change to only include after a connection closes.
 
-### Get
+### State Changed
 ```js
-// download fedora minimal
-api.get('https://download.fedoraproject.org/pub/fedora/linux/releases/35/Spins/armhfp/images/Fedora-Minimal-35-1.2.armhfp.raw.xz', 
-    {
-        timeout: 10000,
-        headers: {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36',
-        }
-    }
-)
+// ConnectionEnded
+// ConnectionStarted
+// ConnectionInterrupted
+// UrlChanged
+// UrlReverted
+// FileFailed
+// FileOverwrite
+// FileNonExistant
+// LinkNonExistant
+// ConnectionHandshake
+
+api.event.add("ConnectionEnded", (event) => {
+	console.log(
+		event.res.status,
+		event.res.explaination
+	)
+})
 ```
 
-Allows custom options to be passed to the `http` or `https` module like the user-agent.
+## Configure options
+```js
+api.config.set("option", value)
+
+api.config.use.json({
+	option: value
+})
+```
