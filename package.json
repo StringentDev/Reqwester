@@ -1,18 +1,42 @@
 {
-    "name": "reqwester",
-    "description": "A simple, lightweight, and fast download framework for Node.js",
-    "version": "1.0.1",
-    "author": "StringentDev",
-    "license": "MIT",
-    "type": "module",
-    "repo": "https://github.com/StringentDev/Reqwester",
-    "homepage": "https://github.com/StringentDev/Reqwester#readme",
-    "main": "./cjs/index.js",
-    "module": "./mjs/index.js",
-    "scripts": {
-        "demo_1": "node ./examples/demo_1.mjs "
-    },
-    "dependencies": {
-        "filedirname": "^2.7.0"
-    }
+  "name": "reqwester",
+  "version": "1.0.0",
+  "description": "Next Version of Reqwester module",
+  "main": "lib/module.js",
+  "module": "lib/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npm run build && node ./examples/demo_1.mjs",
+    "build": "babel lib -d dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/StringentDev/Reqwester.git"
+  },
+  "keywords": [
+    "http",
+    "https",
+    "download",
+    "esm",
+    "commonjs",
+    "cjs"
+  ],
+  "author": "StringentDev",
+  "license": "AGPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/StringentDev/Reqwester/issues"
+  },
+  "homepage": "https://github.com/StringentDev/Reqwester#readme",
+  "dependencies": {
+    "@babel/plugin-transform-modules-umd": "^7.18.0",
+    "@babel/register": "^7.17.7",
+    "chalk": "^4.1.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.17.10",
+    "@babel/core": "^7.18.2",
+    "@babel/plugin-transform-modules-amd": "^7.18.0",
+    "@babel/plugin-transform-modules-commonjs": "^7.18.2",
+    "@babel/preset-env": "^7.18.2"
+  }
 }
